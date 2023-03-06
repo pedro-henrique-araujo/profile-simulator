@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
+
+        body {
+            background: #0493B9;
+            font-family: 'Poppins', sans-serif;
+            color: #1B1C1E;
+        }
+
+        main {
+            background: #D7F3FC;
+            margin: auto;
+            width: 437px;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+            border-radius: 15px;
+            overflow: hidden;
+            box-sizing: border-box;
+            padding-bottom: 30px;
+            height: 500px;
+        }
+
+        #top-bar {
+            height: 200px;
+            width: 100%;
+            background: #36C5F0;
+        }
+
+        #refresh-button {
+            border: none;
+            background:none;
+            margin-top: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        #loading-icon {
+            margin-top: -100px;
+        }
+
+        #profile-image {
+            border-radius: 50%;
+            border: 9px solid #D7F3FC;
+            margin-top: -50%;
+            width: 200px;
+            height: 200px;
+        }
+
+        #full-name {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        #occupation {
+            font-weight: 500;
+            font-size: 20px;
+        }
+
+        #gender-and-date-of-birth {
+            color: #555555;
+        }
+
+        :is(#refresh-button, #loadin-icon, #profile-image, #full-name, #occupation, #date-of-birth) {
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div id="top-bar">
+            <button id="refresh-button" onclick="generateProfile()">
+                <img src="./refresh-cw.svg" />
+            </button>
+        </div>
+        <div id="loading-icon">
+            <img src="./loading-icon.svg" alt="" class="src">
+        </div>
+        <div>
+            <img id="profile-image"  />
+        </div>
+
+        <div id="full-name">
+        </div>
+
+        <div id="occupation">
+        </div>
+
+        <div id="gender-and-date-of-birth">
+        </div>
+
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const imgElement = document.getElementById("profile-image");
+        const fullNameElement = document.getElementById('full-name');
+        const occupationElement = document.getElementById('occupation');
+        const genderAndDateOfBirth = document.getElementById('gender-and-date-of-birth');
+        const refreshButtonElement = document.getElementById('refresh-button');
+        const loadingIconElement = document.getElementById('loading-icon');
+
+        async function generateProfile() {
+            imgElement.style.display = 'none';
+            fullNameElement.style.display = 'none';
+            occupationElement.style.display = 'none';
+            genderAndDateOfBirth.style.display = 'none';
+            refreshButtonElement.style.display = 'none';
+            loadingIconElement.style.display = 'inherit';
+
+            const {data} = await axios.get('https://profile-simulator-api.azurewebsites.net/Profile');
+            imgElement.src = data.profileImageUrl;
+            fullNameElement.innerText = data.firstName + ' ' + data.lastName;
+            occupationElement.innerText = data.occupation;
+
+            const dateOfBirth = new Date(data.dateOfBirth);
+            genderAndDateOfBirth.innerText = `${data.gender === 0 ? 'Male' : 'Female'} - ${dateOfBirth.getMonth()+ 1}/${dateOfBirth.getDate()}/${dateOfBirth.getFullYear()}`;
+        
+            imgElement.style.display = 'inherit';
+            fullNameElement.style.display = 'inherit';
+            occupationElement.style.display = 'inherit';
+            genderAndDateOfBirth.style.display = 'inherit';
+            refreshButtonElement.style.display = 'inherit';
+            loadingIconElement.style.display = 'none';
+        }
+
+        generateProfile();
+    </script>
+</body>
+</html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Profile Simulator</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
 
@@ -69,7 +69,11 @@
             color: #555555;
         }
 
-        :is(#refresh-button, #loadin-icon, #profile-image, #full-name, #occupation, #date-of-birth) {
+        #email {
+            color: #555555; 
+        }
+
+        :is(#refresh-button, #loadin-icon, #profile-image, #full-name, #occupation, #gender-and-date-of-birth, #email) {
             display:none;
         }
     </style>
@@ -97,6 +101,9 @@
         <div id="gender-and-date-of-birth">
         </div>
 
+        <div id="email">
+        </div>
+
     </main>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
@@ -106,6 +113,7 @@
         const genderAndDateOfBirth = document.getElementById('gender-and-date-of-birth');
         const refreshButtonElement = document.getElementById('refresh-button');
         const loadingIconElement = document.getElementById('loading-icon');
+        const emailElement = document.getElementById('email');
 
         async function generateProfile() {
             imgElement.style.display = 'none';
@@ -113,12 +121,14 @@
             occupationElement.style.display = 'none';
             genderAndDateOfBirth.style.display = 'none';
             refreshButtonElement.style.display = 'none';
+            emailElement.style.display = 'none';
             loadingIconElement.style.display = 'inherit';
 
             const {data} = await axios.get('https://profile-simulator-api.azurewebsites.net/Profile');
             imgElement.src = data.profileImageUrl;
             fullNameElement.innerText = data.firstName + ' ' + data.lastName;
             occupationElement.innerText = data.occupation;
+            emailElement.innerHTML = data.email;
 
             const dateOfBirth = new Date(data.dateOfBirth);
             genderAndDateOfBirth.innerText = `${data.gender === 0 ? 'Male' : 'Female'} - ${dateOfBirth.getMonth()+ 1}/${dateOfBirth.getDate()}/${dateOfBirth.getFullYear()}`;
@@ -128,6 +138,7 @@
             occupationElement.style.display = 'inherit';
             genderAndDateOfBirth.style.display = 'inherit';
             refreshButtonElement.style.display = 'inherit';
+            emailElement.style.display = 'inherit';
             loadingIconElement.style.display = 'none';
         }
 
